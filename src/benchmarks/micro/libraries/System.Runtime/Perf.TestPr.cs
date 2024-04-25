@@ -14,7 +14,12 @@ namespace System.Tests
 	public class Perf_TestPr
 	{
 		public static Guid GuidVal = Guid.NewGuid();
+		public static object GuidValBoxed = GuidVal;
 		[Benchmark]
-		public int CompareTo_Guid() => GuidVal.CompareTo((object)GuidVal);
+		public int CompareTo_Guid_Same() => GuidVal.CompareTo(GuidValBoxed);
+
+		public static object OtherGuidValBoxed = Guid.NewGuid();
+		[Benchmark]
+		public int CompareTo_Guid_Different() => GuidVal.CompareTo(OtherGuidValBoxed);
 	}
 }
