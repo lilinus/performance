@@ -13,13 +13,26 @@ namespace System.Tests
 	[BenchmarkCategory(Categories.Libraries)]
 	public class Perf_TestPr
 	{
-		public static Guid GuidVal = Guid.NewGuid();
-		public static object GuidValBoxed = GuidVal;
-		[Benchmark]
-		public int CompareTo_Guid_Same() => GuidVal.CompareTo(GuidValBoxed);
+		private const int iterations = 100;
+		public static IEnumerable<object[]> Values()
+		{
+			yield return new object[] { Int128.MinValue, Int128.One };
+			yield return new object[] { -Int128.One, Int128.One };
+			yield return new object[] { Int128.Zero, Int128.One };
+			yield return new object[] { Int128.One, Int128.One };
+			yield return new object[] { Int128.MaxValue, Int128.One };
+			yield return new object[] { Int128.MinValue, -Int128.One };
+			yield return new object[] { -Int128.One, -Int128.One };
+			yield return new object[] { Int128.Zero, -Int128.One };
+			yield return new object[] { Int128.One, -Int128.One };
+			yield return new object[] { Int128.MaxValue, -Int128.One };
+		}
 
-		public static object OtherGuidValBoxed = Guid.NewGuid();
-		[Benchmark]
-		public int CompareTo_Guid_Different() => GuidVal.CompareTo(OtherGuidValBoxed);
+		[Benchmark, ArgumentsSource(nameof(Values))]
+		public void op_GreaterThan(Int128 val1, Int128 val2)
+		{
+			for (int i = 0; i < iterations; i++)
+				_ = val1 > val2;
+		}
 	}
 }
