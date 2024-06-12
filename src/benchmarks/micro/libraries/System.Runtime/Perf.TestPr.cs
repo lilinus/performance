@@ -14,20 +14,26 @@ namespace System.Tests
 	[BenchmarkCategory(Categories.Libraries)]
 	public class Perf_TestPr
 	{
-		public static IEnumerable<object[]> DateTimeFormatValues()
+		public static IEnumerable<object[]> Values()
 		{
-			yield return new object[] { new DateTime(12345678900L), @"yyyy\-MM\-dd\.HH\.mm\.ss\.FFFFFFF" };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1) };
+			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) };
 		}
-		[Benchmark, ArgumentsSource(nameof(DateTimeFormatValues))]
-		public string DateTime_Format(DateTime value, string fmt) => value.ToString(fmt, CultureInfo.InvariantCulture);
 
-		public static IEnumerable<object[]> TimeSpanFormatValues()
-		{
-			yield return new object[] { new TimeSpan(12345678900L), @"d\.hh\.mm\.ss\.FFFFFFF" };
-			yield return new object[] { new TimeSpan(12345678900L), "g" };
-			yield return new object[] { new TimeSpan(12345678900L), "G" };
-		}
-		[Benchmark, ArgumentsSource(nameof(TimeSpanFormatValues))]
-		public string TimeSpan_Format(TimeSpan value, string fmt) => value.ToString(fmt, CultureInfo.InvariantCulture);
+		[Benchmark, ArgumentsSource(nameof(Values))]
+		public int Guid_CompareTo(Guid left, Guid right) => left.CompareTo(right);
+
+		[Benchmark, ArgumentsSource(nameof(Values))]
+		public bool Guid_LessThan(Guid left, Guid right) => left < right;
 	}
 }
