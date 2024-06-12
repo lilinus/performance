@@ -14,26 +14,28 @@ namespace System.Tests
 	[BenchmarkCategory(Categories.Libraries)]
 	public class Perf_TestPr
 	{
-		public static IEnumerable<object[]> Values()
+		public static IEnumerable<object> DateOnlyValues()
 		{
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1) };
-			yield return new object[] { new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), new Guid(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) };
+			yield return DateOnly.FromDateTime(DateTime.Today);
 		}
 
-		[Benchmark, ArgumentsSource(nameof(Values))]
-		public int Guid_CompareTo(Guid left, Guid right) => left.CompareTo(right);
+		[Benchmark, ArgumentsSource(nameof(DateOnlyValues))]
+		public int DateOnly_Year(DateOnly value) => value.Year;
 
-		[Benchmark, ArgumentsSource(nameof(Values))]
-		public bool Guid_LessThan(Guid left, Guid right) => left < right;
+		[Benchmark, ArgumentsSource(nameof(DateOnlyValues))]
+		public int DateOnly_Month(DateOnly value) => value.Month;
+
+		[Benchmark, ArgumentsSource(nameof(DateOnlyValues))]
+		public int DateOnly_Day(DateOnly value) => value.Day;
+
+		[Benchmark, ArgumentsSource(nameof(DateOnlyValues))]
+		public int DateOnly_DayOfYear(DateOnly value) => value.DayOfYear;
+
+		[Benchmark, ArgumentsSource(nameof(DateOnlyValues))]
+		public (int, int, int) DateOnly_Deconstruct(DateOnly value)
+		{
+			(int y, int m, int d) = value;
+			return (y, m, d);
+		}
 	}
 }
