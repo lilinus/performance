@@ -15,7 +15,7 @@ namespace System.Numerics.Tensors.Tests
     public class Perf_FloatingPointTensorPrimitives<T>
         where T : unmanaged, IFloatingPointIeee754<T>
     {
-        [Params(128, 6 * 512 + 7)]
+        [Params(128, 6 * 512 + 7, 300 * 512 + 7)]
         public int BufferLength;
 
         private T[] _source1;
@@ -69,7 +69,10 @@ namespace System.Numerics.Tensors.Tests
         [Benchmark]
         public void FusedMultiplyAdd_Vectors() => TensorPrimitives.FusedMultiplyAdd<T>(_source1, _source2, _source3, _destination);
 
-        [Benchmark]
+		[Benchmark]
+		public void SoftMax_Vectors() => TensorPrimitives.SoftMax<T>(_source1, _destination);
+
+		[Benchmark]
         public void FusedMultiplyAdd_ScalarAddend() => TensorPrimitives.FusedMultiplyAdd(_source1, _scalar1, _source2, _destination);
 
         [Benchmark]
